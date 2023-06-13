@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <limits>
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -24,7 +25,7 @@ void createDataBase(vector<userAddressInfo>* addresses);
 vector<userAddressInfo> readAddresses();
 void deleteAddressById(string filename, int idToDelete);
 void updateDataBase(string filename, vector<userAddressInfo>* users);
-void addAddressToDataBase(string filename, string address);
+void addAddressToDataBase(string filename, string newAddress);
 
 
 int main() {
@@ -56,7 +57,14 @@ int main() {
 
 	cout << "Enter id which address you want to delete: ";
 	cin >> idToDelete;
-	deleteAddressById("database.dat", idToDelete);
+	if (cin.fail()) {
+		cout << "Error, your wrote a wrong value." << endl;
+		cin.clear();
+		std::cin.ignore(INT_MAX, '\n');
+	}
+	else {
+		deleteAddressById("database.dat", idToDelete);
+	}
 
 	readedAddresses = readAddresses();
 	for (const auto& address : readedAddresses) {
@@ -141,13 +149,20 @@ void updateDataBase(string filename, vector<userAddressInfo>* addresses) {
 	}
 	outputFile.close();
 }
-void addAddressToDataBase(string filename, string address) {
+void addAddressToDataBase(string filename, string newAddress) {
+	vector<userAddressInfo> addresses = readAddresses();
+	for (const auto& address : addresses) {
+		if (address.pcAddress == newAddress) {
+			cerr << "This address is already exists in database." << endl;
+			return;
+		}
+	}
 	ofstream file("database.dat",  ios::app);
 	if (!file.is_open()) {
-		cerr << "Failed to open the database file." << endl;
+		cerr << "Failed to open the database file in addAddressToDataBase." << endl;
 		return;
 	}
-	file << generateUniqueId()  << " " << address << '\n';
+	file << generateUniqueId()  << " " << newAddress << '\n';
 	file.close();
 	cout << "Address was successfully added to database." << endl;
 }
