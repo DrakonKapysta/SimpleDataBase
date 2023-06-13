@@ -40,7 +40,7 @@ int main() {
 	vector<userAddressInfo> addresses;
 	addresses.push_back({ generateUniqueId(),"DESKTOP-LT61FS4" });
 	addresses.push_back({ generateUniqueId(),"DESKTOP-09499TF" });
-	addresses.push_back({ generateUniqueId(),"DESKTOP-HARITONE" });
+	addresses.push_back({ generateUniqueId(),"DESKTOP-H2RFUD" });
 
 	if (fileExists("database.dat")) {
 		cout << "File already exists." << endl;
